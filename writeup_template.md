@@ -19,12 +19,12 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/undistorted.png "Undistorted"
+[image1]: ./examples/raw_vs_undistorted.png "Undistorted"
 [image2]: ./examples/test_img.png "Road Transformed"
 [image3]: ./examples/thresholded.png "Binary Example"
 [image4]: ./examples/perspective_transform.png "Warp Example"
 [image5]: ./examples/color_fit_lines.jpg "Fit Visual"
-[image6]: ./examples/example_output.jpg "Output"
+[image6]: ./examples/curvature.png "Output"
 [video1]: ./project_video.mp4 "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
@@ -60,13 +60,13 @@ To demonstrate this step, I will describe how I apply the distortion correction 
 
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
-I used a combination of color and gradient thresholds to generate a binary image (thresholding steps in method called "threshold_img").  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
+I used a combination of color and gradient thresholds to generate a binary image (thresholding steps in method called "threshold_img").  Here's an example of my output for this step.
 
 ![alt text][image3]
 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
-The code for my perspective transform includes a function called `perspective_transform` which used the transform matrix computed in the function `compute_transform_matrix()`I chose the hardcode the source and destination points in the following manner:
+The code for my perspective transform includes a function called `perspective_transform` which used the transform matrix computed in the function `compute_transform_matrix()`.I chose the hardcode the source and destination points in the following manner:
 
 ```python
 src = np.array([(imshape[1]*0.4, imshape[0]*0.65), 
@@ -87,17 +87,15 @@ I verified that my perspective transform was working as expected by drawing the 
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial in the function called "lane_boundaries".
+I did this in the function called "lane_boundaries". I identified the pixels in both the right and the left lanes and fitted a 2nd degree polynomial through each of them using the function "np.polyfit".
 
 ![alt text][image5]
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-I did this in lines # through # in my code in `my_other_file.py`
+I did this in the function called "compute_curvature". The curvature was computed by first fitting a 2nd degree polynomial not in pixel space, but in real world space. The position of the vehicle is the offset between the center of the image and the center of lane which is computed as the middle distance between the detected left and right lane boundaries.
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
-
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
 
 ![alt text][image6]
 
@@ -115,5 +113,6 @@ Here's a link to the video result(./project_video_output.mp4)
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+One of the biggest issues I faced is finding the right parameters for the multiple stages of this pipeline such that the end result is satisfactory. This included but was not restricted to finding the ideal threshold parameters and finding the ideal ROI for the perspective transform  
 
+One of the places most likely to fail is at the perspective transform, as
