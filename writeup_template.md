@@ -114,4 +114,4 @@ Here's a link to the video result(./project_video_output.mp4)
 
 One of the biggest issues I faced is finding the right parameters for the multiple stages of this pipeline such that the end result is satisfactory. This included but was not restricted to finding the ideal threshold parameters and finding the ideal ROI for the perspective transform  
 
-One of the places most likely to fail is at the perspective transform, as
+One of the places most likely to fail is in cases where there are a lot of shadows on the road, as in this case the hardcoded color thresholds might not be able to accurately detect the lines. In order to make the model more robust to this situations we could use some adaptive threhsolding mechanism or average over N frames when producing the output.
