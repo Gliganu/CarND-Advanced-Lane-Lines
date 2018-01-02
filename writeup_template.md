@@ -69,16 +69,15 @@ I used a combination of color and gradient thresholds to generate a binary image
 The code for my perspective transform includes a function called `perspective_transform` which used the transform matrix computed in the function `compute_transform_matrix()`.I chose the hardcode the source and destination points in the following manner:
 
 ```python
-src = np.array([(imshape[1]*0.4, imshape[0]*0.65), 
-                (imshape[1]*0.6, imshape[0]*0.65), 
-                (imshape[1]*0.92,imshape[0]),
-                (imshape[0]*0.2,imshape[0])], dtype=np.float32)   
-                
-dst =  np.float32([[0, 0], 
-                      [imshape[1], 0], 
-                      [imshape[1], imshape[0]], 
-                      [0, imshape[0]]])     
-                      
+    src = np.float32([[545, 460],
+                    [735, 460],
+                    [1280, 700],
+                    [0, 700]])
+
+    dst = np.float32([[0, 0],
+                     [1280, 0],
+                     [1280, 720],
+                     [0, 720]])
 ```
 
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
