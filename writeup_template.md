@@ -1,6 +1,3 @@
-## Writeup Template
-
-### You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
 
 ---
 
@@ -19,12 +16,13 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/raw_vs_undistorted.png "Undistorted"
+[image1]: ./examples/chessboard_distorsion.png "Undistorted"
 [image2]: ./examples/test_img.png "Road Transformed"
 [image3]: ./examples/thresholded.png "Binary Example"
 [image4]: ./examples/perspective_transform.png "Warp Example"
-[image5]: ./examples/color_fit_lines.jpg "Fit Visual"
+[image5]: ./examples/lane_pixels.png "Fit Visual"
 [image6]: ./examples/curvature.png "Output"
+[image7]: examples/pipeline_distorsion.png "Undistorted"
 [video1]: ./project_video.mp4 "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
@@ -35,7 +33,7 @@ The goals / steps of this project are the following:
 
 ### Writeup / README
 
-#### 1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  [Here](https://github.com/udacity/CarND-Advanced-Lane-Lines/blob/master/writeup_template.md) is a template writeup for this project you can use as a guide and a starting point.  
+#### 1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  [Here](https://github.com/Gliganu/CarND-Advanced-Lane-Lines/blob/master/writeup_template.md) is a template writeup for this project you can use as a guide and a starting point.  
 
 You're reading it!
 
@@ -51,6 +49,9 @@ I then used the output `objpoints` and `imgpoints` to compute the camera calibra
 
 ![alt text][image1]
 
+For an image in the video, the distorsion correction would look similar to this: 
+![alt text][image7]
+
 ### Pipeline (single images)
 
 #### 1. Provide an example of a distortion-corrected image.
@@ -58,9 +59,25 @@ I then used the output `objpoints` and `imgpoints` to compute the camera calibra
 To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one:
 ![alt text][image2]
 
+
+
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
-I used a combination of color and gradient thresholds to generate a binary image (thresholding steps in method called "threshold_img").  Here's an example of my output for this step.
+I used color thresholds to generate a binary image (thresholding steps in method called "threshold_img").  Here's an example of my output for this step.
+
+I initially used a combination of color and gradient thresholds but it turned out that the gradient thresholds weren't robust to various shadows / lights on the surface on the road so I decided to eliminate it. 
+
+For the color thresholds, two different steps were performed. One for the yellow color which constituted on converting the image to HSV space and masking all the values between 
+```python
+    lower = np.array([20,60,60])
+    upper = np.array([38,174, 250])
+  ```
+ and one for the white color which involved keeping the image in RGB space and masking all values between 
+ ```python
+    lower = np.array([202,202,202])
+    upper = np.array([255,255,255])
+  ```
+  
 
 ![alt text][image3]
 
@@ -114,4 +131,4 @@ Here's a link to the video result(./project_video_output.mp4)
 
 One of the biggest issues I faced is finding the right parameters for the multiple stages of this pipeline such that the end result is satisfactory. This included but was not restricted to finding the ideal threshold parameters and finding the ideal ROI for the perspective transform  
 
-One of the places most likely to fail is in cases where there are a lot of shadows on the road, as in this case the hardcoded color thresholds might not be able to accurately detect the lines. In order to make the model more robust to this situations we could use some adaptive threhsolding mechanism or average over N frames when producing the output.
+One of the places most likely to fail is in cases where there are a lot of shadows on the road, as in this case the hardcoded color thresholds might not be able to accurately detect the lines. In order to make the model more robust to this situations we could use some adaptive thresholding mechanism or average over N frames when producing the output.
